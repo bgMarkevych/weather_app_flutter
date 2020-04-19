@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:meteoshipflutter/utils/colors.dart';
+import 'package:meteoshipflutter/utils/weather_code_utils.dart';
 
 class HourlyForecast {
   String datetime;
@@ -428,12 +430,112 @@ class ForecastData {
   Forecast _currentForecast;
   List<DailyForecast> _dailyForecasts;
 
-
   ForecastData(this._currentForecast, this._dailyForecasts);
 
   List<DailyForecast> get dailyForecasts => _dailyForecasts;
 
   CurrentForecast get currentForecast => _currentForecast;
+}
 
+class HistoricalForecast {
+  static const humidityMax = 100.0;
+  static const precipMMMax = 163.0;
+  static const pressureMax = 2026.0;
+  static const winddirDegreeMax = 360.0;
+  static const cloudcoverMax = 100.0;
+  static const heatIndexCMax = 40.0;
+  static const windSpeedMax = 222.24;
+
+  static const weatherTempMax = 40.0;
+  static const max_weather_code = 395;
+
+  int year;
+  int month;
+  int day;
+  double windspeedKmph;
+  double humidity;
+  double precipMM;
+  double pressure;
+  double winddirDegree;
+  double cloudcover;
+  double heatIndexC;
+
+  int weatherCode;
+  int tempC;
+
+  static HistoricalForecast fromJson(Map<String, dynamic> json) {
+    HistoricalForecast historicalForecast = HistoricalForecast();
+
+    var date = json["date"];
+    DateTime dateTime = DateFormat("yyyy-MM-dd").parse(date);
+    historicalForecast.year = dateTime.year;
+    historicalForecast.month = dateTime.month;
+    historicalForecast.day = dateTime.day;
+    historicalForecast.windspeedKmph =
+        double.parse(json["hourly"][0]["windspeedKmph"]);
+    historicalForecast.humidity = double.parse(json["hourly"][0]["humidity"]);
+    historicalForecast.precipMM = double.parse(json["hourly"][0]["precipMM"]);
+    historicalForecast.pressure = double.parse(json["hourly"][0]["pressure"]);
+    historicalForecast.winddirDegree =
+        double.parse(json["hourly"][0]["winddirDegree"]);
+    historicalForecast.cloudcover =
+        double.parse(json["hourly"][0]["cloudcover"]);
+    historicalForecast.heatIndexC =
+        double.parse(json["hourly"][0]["HeatIndexC"]);
+
+    historicalForecast.weatherCode =
+        int.parse(json["hourly"][0]["weatherCode"]);
+    historicalForecast.tempC = int.parse(json["hourly"][0]["tempC"]);
+
+    return historicalForecast;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "year": year,
+      "month": month,
+      "day": day,
+      "windspeedKmph": windspeedKmph,
+      "humidity": humidity,
+      "precipMM": precipMM,
+      "pressure": pressure,
+      "winddirDegree": winddirDegree,
+      "weatherCode": weatherCode,
+      "cloudcover": cloudcover,
+      "heatIndexC": cloudcover,
+      "tempC": tempC,
+    };
+  }
+
+  static HistoricalForecast fromMap(Map<String, dynamic> map) {
+    HistoricalForecast historicalForecast = HistoricalForecast();
+
+    historicalForecast.year = map["year"];
+    historicalForecast.month = map["month"];
+    historicalForecast.day = map["day"];
+    historicalForecast.windspeedKmph = map["windspeedKmph"];
+    historicalForecast.humidity = map["humidity"];
+    historicalForecast.precipMM = map["precipMM"];
+    historicalForecast.pressure = map["pressure"];
+    historicalForecast.winddirDegree = map["winddirDegree"];
+    historicalForecast.cloudcover = map["cloudcover"];
+    historicalForecast.heatIndexC = map["heatIndexC"];
+    historicalForecast.weatherCode = map["weatherCode"];
+    historicalForecast.tempC = map["tempC"];
+
+    return historicalForecast;
+  }
+
+  List<double> get neuron {
+    return <double>[
+//      normalizeInput(humidity, humidityMax),
+      cloudcover > 50 ? 1.0 : 0.0,
+      humidity > 60 ? 1.0: 0.0,
+      1.0
+//      normalizeInput(tempC.toDouble(), weatherTempMax)
+    ];
+  }
+
+  double get result => getOneOrZero(weatherCode);
 
 }

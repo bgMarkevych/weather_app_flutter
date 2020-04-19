@@ -8,6 +8,7 @@ import 'package:meteoshipflutter/blocks/weather_blocks.dart';
 import 'package:meteoshipflutter/model/data/data_model.dart';
 import 'package:meteoshipflutter/utils/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:meteoshipflutter/widgets/prediction.dart';
 
 import 'maps.dart';
 
@@ -153,7 +154,6 @@ class _WeatherScreenState extends State<WeatherScreen>
                               initialData: false,
                               stream: _weatherBlock.dataAnimationStream,
                               builder: (context, snapshot) {
-                                print(snapshot.data.toString() + " animation");
                                 return Container(
                                   child: InkWell(
                                     onTap: () {
@@ -229,8 +229,16 @@ class _WeatherScreenState extends State<WeatherScreen>
                             ],
                           ),
                         ),
-                        BottomMenuItem(
-                            "assets/images/predict_weather.svg", "Predict"),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PredictionWidget()));
+                          },
+                          child: BottomMenuItem(
+                              "assets/images/predict_weather.svg", "Predict"),
+                        ),
                       ],
                     ),
                   ),

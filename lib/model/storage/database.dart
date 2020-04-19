@@ -10,6 +10,7 @@ class DataBaseHelper {
   static const String CURRENT_WEATHER_TABLE_NAME = "current_weather";
   static const String HOURLY_FORECAST_TABLE_NAME = "hourly_forecast";
   static const String DAILY_FORECAST_TABLE_NAME = "daily_forecast";
+  static const String HISTORICAL_FORECAST_TABLE_NAME = "historical_forecast";
 
   DataBaseHelper();
 
@@ -45,6 +46,18 @@ class DataBaseHelper {
       txn.rawQuery("DELETE FROM " + HOURLY_FORECAST_TABLE_NAME);
       items.forEach((element) async {
         await txn.insert(HOURLY_FORECAST_TABLE_NAME, element.toMap());
+      });
+    });
+  }
+
+  Future<void> saveHistoricalForecasts(List<HistoricalForecast> items)async{
+    if (_database == null) {
+      _database = await _provideDatabase();
+    }
+    await _database.transaction((txn) async {
+      txn.rawQuery("DELETE FROM " + HISTORICAL_FORECAST_TABLE_NAME);
+      items.forEach((element) async {
+        await txn.insert(HISTORICAL_FORECAST_TABLE_NAME, element.toMap());
       });
     });
   }
@@ -108,6 +121,47 @@ class DataBaseHelper {
     return result.map((e) => DailyForecast.fromMap(e)).toList();
   }
 
+  Future<List<HistoricalForecast>> getHistoricalForecasts()async{
+    if (_database == null) {
+      _database = await _provideDatabase();
+    }
+    List<Map> result =
+    await _database.query(HISTORICAL_FORECAST_TABLE_NAME, columns: [
+      "year",
+      "month",
+      "day",
+      "windspeedKmph",
+      "humidity",
+      "precipMM",
+      "pressure",
+      "winddirDegree",
+      "weatherCode",
+      "cloudcover",
+      "heatIndexC",
+      "tempC",
+      "id"
+    ]);
+    return result.map((e) => HistoricalForecast.fromMap(e)).toList();
+  }
+
+  Future<HistoricalForecast> getHistoricalForecastByCode(int code)async{
+    if (_database == null) {
+      _database = await _provideDatabase();
+    }
+    List<Map> result =
+    await _database.rawQuery("SELECT * FROM $HISTORICAL_FORECAST_TABLE_NAME  WHERE weatherCode = $code");
+    return result.map((e) => HistoricalForecast.fromMap(e)).toList()[0];
+  }
+
+  Future<List<HistoricalForecast>> getHistoricalForecastsByDate(int day)async{
+    if (_database == null) {
+      _database = await _provideDatabase();
+    }
+    List<Map> result =
+    await _database.rawQuery("SELECT * FROM $HISTORICAL_FORECAST_TABLE_NAME WHERE day = $day");
+    return result.map((e) => HistoricalForecast.fromMap(e)).toList();
+  }
+
   Future<Database> _provideDatabase() async {
     var databasesPath = await getDatabasesPath();
     String path = databasesPath + 'demo.db';
@@ -118,6 +172,7 @@ class DataBaseHelper {
       await db.execute(_provideCurrentWeatherTableCreationString());
       await db.execute(_provideDailyForecastTableCreationString());
       await db.execute(_provideHourlyForecastTableCreationString());
+      await db.execute(_provideHistoricalForecastTableCreationString());
     });
     return database;
   }
@@ -170,6 +225,24 @@ class DataBaseHelper {
         'pod TEXT,' +
         'code TEXT,' +
         'icon TEXT' +
+        ')';
+  }
+
+  String _provideHistoricalForecastTableCreationString() {
+    return 'CREATE TABLE historical_forecast ' +
+        '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+        'year INTEGER,' +
+        'month INTEGER,' +
+        'day INTEGER,' +
+        'windspeedKmph REAL,' +
+        'humidity REAL,' +
+        'precipMM REAL,' +
+        'pressure REAL,' +
+        'winddirDegree REAL,' +
+        'cloudcover REAL,' +
+        'heatIndexC REAL,' +
+        'weatherCode INTEGER,' +
+        'tempC INTEGER' +
         ')';
   }
 }
