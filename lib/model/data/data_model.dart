@@ -11,7 +11,7 @@ class HourlyForecast {
   String pod;
 
   String icon;
-  String code;
+  int code;
 
   int id;
 
@@ -36,7 +36,7 @@ class HourlyForecast {
         data["timestamp_local"].replaceAll(new RegExp(r'T'), " ");
     hourlyWeather.temp = double.parse(data["temp"].toString());
 
-    hourlyWeather.code = data["weather"]["code"].toString();
+    hourlyWeather.code = data["weather"]["code"];
     hourlyWeather.icon = data["weather"]["icon"];
 
     return hourlyWeather;
@@ -48,7 +48,7 @@ class HourlyForecast {
     hourlyWeather.datetime = data["datetime"];
     hourlyWeather.temp = data["temp"];
 
-    hourlyWeather.code = data["code"];
+    hourlyWeather.code = int.parse(data["code"]);
     hourlyWeather.icon = data["icon"];
 
     return hourlyWeather;
@@ -72,9 +72,15 @@ class CurrentWeather implements Forecast {
   double lat;
 
   String icon;
-  String code;
+  int code;
 
   int id;
+
+
+  @override
+  String get getCode {
+    return code.toString();
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -92,7 +98,7 @@ class CurrentWeather implements Forecast {
       "lon": lon,
       "lat": lat,
       "icon": icon,
-      "code": code,
+      "code": getCode,
     };
   }
 
@@ -134,7 +140,7 @@ class CurrentWeather implements Forecast {
     currentWeather.temp = double.tryParse(data["temp"].toString());
     currentWeather.appTemp = double.tryParse(data["appTemp"].toString());
 
-    currentWeather.code = data["code"];
+    currentWeather.code = int.parse(data["code"]);
     currentWeather.icon = data["icon"];
 
     return currentWeather;
@@ -174,9 +180,14 @@ class DailyForecast implements Forecast {
   double maxTemp;
 
   String icon;
-  String code;
+  int code;
 
   int id;
+
+  @override
+  String get getCode {
+    return code.toString();
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -192,7 +203,7 @@ class DailyForecast implements Forecast {
       "maxTemp": maxTemp,
       "cityName": cityName,
       "icon": icon,
-      "code": code,
+      "code": getCode,
     };
   }
 
@@ -209,7 +220,7 @@ class DailyForecast implements Forecast {
     dailyWeather.temp = double.parse(data["temp"].toString());
     dailyWeather.minTemp = double.parse(data["min_temp"].toString());
 
-    dailyWeather.code = data["weather"]["code"].toString();
+    dailyWeather.code = data["weather"]["code"];
     dailyWeather.icon = data["weather"]["icon"];
 
     return dailyWeather;
@@ -228,7 +239,7 @@ class DailyForecast implements Forecast {
     dailyWeather.temp = data["temp"];
     dailyWeather.minTemp = data["minTemp"];
 
-    dailyWeather.code = data["code"];
+    dailyWeather.code = int.parse(data["code"]);
     dailyWeather.icon = data["icon"];
 
     return dailyWeather;
@@ -316,7 +327,7 @@ abstract class Forecast {
 
   String get pod;
 
-  String get code;
+  String get getCode;
 
   Map<String, dynamic> get details;
 }
@@ -401,7 +412,7 @@ class CurrentForecast implements Forecast {
   String get city => _currentWeather.city;
 
   @override
-  String get code => _currentWeather.code;
+  String get getCode => _currentWeather.getCode.toString();
 
   @override
   String get date => _currentWeather.date;

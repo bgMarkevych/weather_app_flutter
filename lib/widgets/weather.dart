@@ -79,7 +79,7 @@ class _WeatherScreenState extends State<WeatherScreen>
                                               snapshot.data.currentForecast,
                                               WeatherState.getWeatherStateById(
                                                   snapshot.data.currentForecast
-                                                      .code)));
+                                                      .getCode)));
                                     } else {
                                       _weatherBlock.pushColor(
                                           WeatherState.getDayNightColor(
@@ -88,7 +88,7 @@ class _WeatherScreenState extends State<WeatherScreen>
                                                   snapshot
                                                       .data
                                                       .dailyForecasts[0]
-                                                      .code)));
+                                                      .getCode)));
                                     }
                                     setState(() {
                                       _selectedMenuItem = position;
@@ -287,7 +287,7 @@ class TopForecastContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var state = WeatherState.getWeatherStateById(_data.code);
+    var state = WeatherState.getWeatherStateById(_data.getCode);
     var dateFormat = new DateFormat("yyyy-MM-dd HH:mm");
     var dateTime = dateFormat.parse(_data.date);
     return Container(
@@ -519,7 +519,7 @@ List<Widget> getForecasrDetailsPagerWidgetsList(
           itemCount: forecast.hourlyForecasts.length,
           itemBuilder: (context, position) {
             WeatherState state = WeatherState.getWeatherStateById(
-                forecast.hourlyForecasts[position].code);
+                forecast.hourlyForecasts[position].code.toString());
             final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
             DateTime dateTime =
                 dateFormat.parse(forecast.hourlyForecasts[position].datetime);
@@ -693,7 +693,7 @@ class _DailyForecastWidgetState extends State<DailyForecastWidget>
     return PageView(
       onPageChanged: (position) {
         widget._weatherBlock.pushColor(
-            WeatherState.getWeatherStateById(widget._data[position].code)
+            WeatherState.getWeatherStateById(widget._data[position].getCode)
                 .color);
       },
       physics: BouncingScrollPhysics(),

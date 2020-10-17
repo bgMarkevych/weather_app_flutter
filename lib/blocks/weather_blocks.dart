@@ -33,7 +33,7 @@ class WeatherBlock extends BaseBlock {
         "lat": event.currentForecast.currentWeather.lat
       });
       _cityNameStreamController.sink.add(event.currentForecast.city);
-      var state = WeatherState.getWeatherStateById(event.currentForecast.code);
+      var state = WeatherState.getWeatherStateById(event.currentForecast.getCode);
       _colorStreamController.sink
           .add(WeatherState.getDayNightColor(event.currentForecast, state));
       _refreshDataAnimationStreamController.sink.add(false);
@@ -79,14 +79,14 @@ class WeatherBlock extends BaseBlock {
       if (currentTab == 0) {
         _cityNameStreamController.sink.add(event.currentForecast.city);
         var state =
-            WeatherState.getWeatherStateById(event.currentForecast.code);
+            WeatherState.getWeatherStateById(event.currentForecast.getCode);
         _colorStreamController.sink
             .add(WeatherState.getDayNightColor(event.currentForecast, state));
         _refreshDataAnimationStreamController.sink.add(false);
       } else {
         _cityNameStreamController.sink.add(event.currentForecast.city);
         var state =
-            WeatherState.getWeatherStateById(event.dailyForecasts[0].code);
+            WeatherState.getWeatherStateById(event.dailyForecasts[0].getCode);
         _colorStreamController.sink
             .add(WeatherState.getDayNightColor(event.dailyForecasts[0], state));
         _refreshDataAnimationStreamController.sink.add(false);
@@ -107,14 +107,14 @@ class WeatherBlock extends BaseBlock {
       if (currentTab == 0) {
         _cityNameStreamController.sink.add(event.currentForecast.city);
         var state =
-        WeatherState.getWeatherStateById(event.currentForecast.code);
+        WeatherState.getWeatherStateById(event.currentForecast.getCode);
         _colorStreamController.sink
             .add(WeatherState.getDayNightColor(event.currentForecast, state));
         _refreshDataAnimationStreamController.sink.add(false);
       } else {
         _cityNameStreamController.sink.add(event.currentForecast.city);
         var state =
-        WeatherState.getWeatherStateById(event.dailyForecasts[0].code);
+        WeatherState.getWeatherStateById(event.dailyForecasts[0].getCode);
         _colorStreamController.sink
             .add(WeatherState.getDayNightColor(event.dailyForecasts[0], state));
         _refreshDataAnimationStreamController.sink.add(false);
