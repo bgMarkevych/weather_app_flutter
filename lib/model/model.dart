@@ -17,7 +17,7 @@ const ONE_HOUR = 3600000;
 class Model {
   Dio _dio;
   DataBaseHelper _dataBaseHelper;
-  String _appKey = "2bd735068fc94036960b9df447a7a439";
+  String _appKey = "2c437fe0199f45ba9884e1923c9c264a";
   Perceptron _perceptron;
 
   Model(this._dio, this._dataBaseHelper) {
@@ -134,18 +134,17 @@ class Model {
     for (int i = 0; i < 12; i++) {
       var dates = getHistoricalDates(i);
       Map<String, String> parameters = {
-        "key": "9383e914c44a4b5198b170544201604",
-        "q": forecast.lat.toString() + "," + forecast.lon.toString(),
-        "date": dates["startDate"],
-        "enddate": dates["endDate"],
-        "format": "json",
-        "tp": "24",
+        "key": _appKey,
+        "lat": forecast.lat.toString(),
+        "lon": forecast.lon.toString(),
+        "start_date": dates["startDate"],
+        "end_date": dates["endDate"]
       };
       var result = await _dio
-          .get("http://api.worldweatheronline.com/premium/v1/past-weather.ashx",
+          .get("https://api.weatherbit.io/v2.0/history/daily",
           queryParameters: parameters)
           .then((value) {
-        var result = value.data["data"]["weather"];
+        var result = value.data["data"];
         print(value.data);
         return result;
       }).then((value) =>
@@ -158,13 +157,16 @@ class Model {
   }
 
   Future<void> trainNetwork() async {
-    _perceptron.trainTest();
-    var rain = await _dataBaseHelper.getHistoricalForecastByCode(353);
-   _perceptron.predictTest(rain.neuron);
-    var sun = await _dataBaseHelper.getHistoricalForecastByCode(113);
-    _perceptron.predictTest(sun.neuron);
-    _perceptron.predictTest();
+    _perceptron.train(1000, 0.75);
+    // var sun = await _dataBaseHelper.getHistoricalForecastByCode(113);
+    // _perceptron.predictTest(sun.neuron);
+    // _perceptron.predictTest();
 //  _perceptron.trainTest();
+  }
+
+  Future<void> predictWeather() async {
+    var rain = await _dataBaseHelper.getHistoricalForecastByCode(353);
+    _perceptron.predict(rain);
   }
 
 }

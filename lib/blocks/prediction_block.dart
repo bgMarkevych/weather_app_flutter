@@ -11,10 +11,10 @@ class PredictionBlock extends BaseBlock {
 
   void startFlow() async {
     _dataStateStreamController.sink.add(DataStatus.loading);
-//    await _model.loadTrainingData();
+   await _model.loadTrainingData();
     _dataStateStreamController.sink.add(DataStatus.training);
     await _model.trainNetwork();
-//    await _model.predictWeather();
+   await _model.predictWeather();
     _dataStateStreamController.sink.add(DataStatus.ok);
   }
 

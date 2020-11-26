@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:developer' as debug;
 
 import 'dart:async';
 import 'package:path/path.dart';
@@ -7,10 +7,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:meteoshipflutter/model/data/data_model.dart';
 
 class DataBaseHelper {
-  static const String CURRENT_WEATHER_TABLE_NAME = "current_weather";
-  static const String HOURLY_FORECAST_TABLE_NAME = "hourly_forecast";
-  static const String DAILY_FORECAST_TABLE_NAME = "daily_forecast";
-  static const String HISTORICAL_FORECAST_TABLE_NAME = "historical_forecast";
+
+  String CURRENT_WEATHER_TABLE_NAME = "current_weather";
+  String HOURLY_FORECAST_TABLE_NAME = "hourly_forecast";
+  String DAILY_FORECAST_TABLE_NAME = "daily_forecast";
+  String HISTORICAL_FORECAST_TABLE_NAME = "historical_forecast";
 
   DataBaseHelper();
 
@@ -149,7 +150,8 @@ class DataBaseHelper {
       _database = await _provideDatabase();
     }
     List<Map> result =
-    await _database.rawQuery("SELECT * FROM $HISTORICAL_FORECAST_TABLE_NAME  WHERE weatherCode = $code");
+    await _database.rawQuery("SELECT * FROM $HISTORICAL_FORECAST_TABLE_NAME");
+           debug.debugger();
     return result.map((e) => HistoricalForecast.fromMap(e)).toList()[0];
   }
 

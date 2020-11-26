@@ -56,7 +56,7 @@ class HourlyForecast {
 }
 
 class CurrentWeather implements Forecast {
-  int rh;
+  dynamic rh;
   String pod;
   double pres;
   String cityName;
@@ -539,11 +539,9 @@ class HistoricalForecast {
 
   List<double> get neuron {
     return <double>[
-//      normalizeInput(humidity, humidityMax),
       cloudcover > 50 ? 1.0 : 0.0,
       humidity > 60 ? 1.0: 0.0,
       1.0
-//      normalizeInput(tempC.toDouble(), weatherTempMax)
     ];
   }
 
