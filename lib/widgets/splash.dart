@@ -28,7 +28,9 @@ class SplashScreenState extends State {
       title: Text("Ooooops"),
       content: Text(error),
     );
-    await showDialog(context: context, child: dialog);
+    await showDialog(context: context, builder: (builderContext) {
+      return dialog;
+    });
   }
 
   void startNewScreen() {

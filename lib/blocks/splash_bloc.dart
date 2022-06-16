@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:meteoshipflutter/model/di/di.dart';
 import 'package:meteoshipflutter/model/exception/error.dart';

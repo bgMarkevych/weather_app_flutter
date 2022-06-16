@@ -17,7 +17,7 @@ const ONE_HOUR = 3600000;
 class Model {
   Dio _dio;
   DataBaseHelper _dataBaseHelper;
-  String _appKey = "2c437fe0199f45ba9884e1923c9c264a";
+  String _appKey = "a70414bdbc7d4647bb118d396a8ad718";
   Perceptron _perceptron;
 
   Model(this._dio, this._dataBaseHelper) {

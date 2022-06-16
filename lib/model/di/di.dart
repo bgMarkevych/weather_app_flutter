@@ -38,24 +38,22 @@ class DIManager {
       receiveTimeout: 3000,
     );
     Dio _dio = Dio(dioOptions);
-    _dio.interceptors.add(
-      InterceptorsWrapper(onRequest: (request) async {
-        var connectivityResult = await (Connectivity().checkConnectivity());
-        if (connectivityResult == ConnectivityResult.none) {
-          return _dio.reject(ConnectionError());
-        }
-        return request;
-      }),
-    );
+    // _dio.interceptors
+    //     .add(InterceptorsWrapper(onRequest: (options, handler) async {
+    //   var connectivityResult = await (Connectivity().checkConnectivity());
+    //       if (connectivityResult == ConnectivityResult.none) {
+    //         return _dio.close(ConnectionError());
+    //       }
+    //       return options;
+    // }));
     _dio.interceptors.add(LogInterceptor(responseBody: true));
     return _dio;
   }
-  
+
   static LocationService get locationService => _provideLocationService();
-  
+
 //  static Model get model => _model;
   static Model get model {
-   return _model;
+    return _model;
   }
-
 }
